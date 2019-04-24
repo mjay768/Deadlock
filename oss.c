@@ -143,7 +143,7 @@ int main(int * argc, char * argv[])
 
     for(i=0;i<18;i++)
     {
-        printf("\n");
+        fprintf(fptr,"\n");
         for(j=0;j<20;j++)
         {
             fprintf(fptr," %d",req[i][j]);
