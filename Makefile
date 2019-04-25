@@ -5,7 +5,7 @@ BINARYOSS = oss
 BINARYUSER = child
 OBJSOSS = oss.o
 OBJSUSER = child.o
-
+HEADERS = deadlockmj.h data.h config.h
 all: $(BINARYOSS) $(BINARYUSER)
 
 $(BINARYOSS): $(OBJSOSS)

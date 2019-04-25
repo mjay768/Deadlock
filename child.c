@@ -15,12 +15,13 @@
 #define reskey 0x11225566
 struct resDescriptor *rptr;
 int SemID;
+
 int main(int *argc, char *argv[])
 {
     int shmid,semid,resid;
     int *count;
     int nograb = 1;
-    int resnum,reqtime,instance;
+    int resnum,reqtime,instance,i;
     //sem_t *sem;
     //key_t key =  ftok("/mysem1212");
     //sem = sem_open(key,O_CREAT | 0666);
@@ -50,15 +51,17 @@ int main(int *argc, char *argv[])
 
     srand(time(NULL));
     reqtime = (rand() % 251) * 1000;
-    instance = rand() % 10;
     printf("\nEntering Critical section\n");
     sem_wait(SemID);
     //sleep(1);
-    usleep(500000);
-    resnum = rand() % 20;
     *count+=1;
     rptr->pids[*count] = getpid();
-    rptr->req[*count][resnum] = instance;
+    for(i=0;i<20;i++)
+    {
+        usleep(100000);
+        instance = rand() % 10;
+        rptr->req[*count][i] = instance;
+    }
     printf("\n Count: %d\n",*count);
     printf("\nExiting critical section\n");
     sem_signal(SemID);

@@ -1,3 +1,14 @@
+/*********************************/
+/*********************************/
+/*Author: Manoj Ponagandla *******/
+/*Title:  Resource Management*****/
+/*Description : This is a simulation
+to the actual Operating system 
+Resource Management and Deadlocks*/
+/*********************************/
+
+
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
@@ -11,6 +22,7 @@
 #include<signal.h>
 #include "data.h"
 #include "config.h"
+#include "deadlockmj.h"
 
 #define key "/mysem1212"
 #define shmkey 0x91919191
@@ -27,11 +39,13 @@ struct Clock *clk;
 struct PCB *pcb;
 int clockid,resid;
 int SemID;
-int maxlimit = 10;
+int maxlimit = 18;
 int parallel_limit = 5;
 int proc_parallel = 0;
 int total_procs = 0;
 int cflag = 1;
+
+int *finish;
 void semInit();
 int main(int * argc, char * argv[])
 {
@@ -82,6 +96,7 @@ int main(int * argc, char * argv[])
     semInit();
     initClock();
     //initPCB();
+    initAvailRes();
     while(cflag)
     {
         rms = (rand() % 501);
@@ -116,6 +131,7 @@ int main(int * argc, char * argv[])
             proc_parallel--;
            
             printf("\n Children after exit: %d\n",count);
+
             
             //printf("\nI am parent and my PID %d",getppid());
         }
@@ -123,8 +139,15 @@ int main(int * argc, char * argv[])
         //printf("\n Random number is: %d\n",rms);
 
         //printf("\nCurrent time is %d:%d",clk->sec,clk->msec);
+        printf("\nMaster is running deadlock Algorithm");
+        fprintf(fptr,"\nMaster is running deadlock algorithm");
+        copySHMData(rptr->available,rptr->req,rptr->alloc,rptr->pids);
+        //sem_wait(SemID);
+        finish = deadlockmj(available_,20,18,request_,allocated_,pids_);
+        //sem_signal(SemID);
         
     }
+
     for(i=0;i<20;i++)
     {
         printf(" R%02i",i);
@@ -141,6 +164,11 @@ int main(int * argc, char * argv[])
         }
     }
 
+
+    printf("\n---Req Matrix---\n");
+
+    for(i=0;i<20;i++)
+        fprintf(fptr,"R%i ",i);
     for(i=0;i<18;i++)
     {
         fprintf(fptr,"\n");
@@ -151,6 +179,9 @@ int main(int * argc, char * argv[])
         }
     }
 
+    printf("\n");
+    for(i=0;i<20;i++)
+        printf("%d ",rptr->available[i]);
     if ((semctl(SemID, 0, IPC_RMID, 1) == -1) && (errno != EINTR)) {
         perror("Semaphore : Removed");
     }
@@ -256,12 +287,42 @@ void initRD()
     
     }
 }
-void initPCB()
+
+void copySHMData(int *available,int **request, int **allocated, int *pids)
 {
     int i,j;
+
     for(i=0;i<18;i++)
     {
-        pcb[i].pid = 0;
-        
+        pids_[i] = rptr->pids[i];
+        for(j=0;j<20;j++)
+        {
+            available_[j] = rptr->available[j];
+            request_[i][j] = rptr->req[i][j];
+            //printf("\nR: %d",rptr->req[i][j]);
+            allocated_[i][j] = rptr->alloc[i][j];
+        }
+    }
+    for(i=0;i<18;i++)
+    {
+        printf("\n");
+        for(j=0;j<20;j++)
+        {
+            request_[i][j] = rptr->req[i][j]; 
+            printf("%4d",request_[i][j]);
+            //fprintf(fptr,"%4d",rptr->req[i][j]);
+        }
+    }
+    printf("\n");
+
+}
+void initAvailRes()
+{
+    int i,r;
+    for(i=0;i<20;i++)
+    {
+        usleep(300000);
+        r= rand() % 6;
+        rptr->available[i] = r;
     }
 }

@@ -19,6 +19,7 @@ void initRD();
 void tandk();
 int createChildProc();
 void initPCB();
+void initAvailRes();
 
 #define MILLI 1000
 
