@@ -30,6 +30,7 @@ int req_lt_available( int **req, int *avail, int pid, int num_res)
             break;
         } else{
              allocated_[pid][i] = request_[pid][num_res];
+             available_[i] -= request_[pid][num_res];
             // printf("\nreq:%d avail:%d num_res : %d PID : %d i : %d\n",request_[pid][num_res],available_[i],num_res,pids_[i],i);
         }
     }

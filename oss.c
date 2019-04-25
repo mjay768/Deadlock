@@ -153,7 +153,7 @@ int main(int * argc, char * argv[])
 
     for(i=0;i<20;i++)
     {
-        printf(" R%02i",i);
+        printf("    R%i",i);
         //fprintf(fptr,"R%02i",i);
     }
     for(i=0;i<18;i++)
@@ -171,7 +171,7 @@ int main(int * argc, char * argv[])
     printf("\n---Req Matrix---\n");
 
     for(i=0;i<20;i++)
-        fprintf(fptr,"R%0i  ",i);
+        fprintf(fptr,"  R%0i",i);
     for(i=0;i<18;i++)
     {
         fprintf(fptr,"\n");
