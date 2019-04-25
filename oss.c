@@ -30,7 +30,6 @@ Resource Management and Deadlocks*/
 #define reskey 0x11225566
 
 
-FILE *fptr;
 
 int clockid;
 int resid;
@@ -140,10 +139,14 @@ int main(int * argc, char * argv[])
 
         //printf("\nCurrent time is %d:%d",clk->sec,clk->msec);
         printf("\nMaster is running deadlock Algorithm");
-        fprintf(fptr,"\nMaster is running deadlock algorithm");
+        fprintf(fptr,"\nMaster is running deadlock algorithm\n");
         copySHMData(rptr->available,rptr->req,rptr->alloc,rptr->pids);
         //sem_wait(SemID);
-        finish = deadlockmj(available_,20,18,request_,allocated_,pids_);
+        if(!(finish = deadlockmj(available_,20,18,request_,allocated_,pids_)))
+        {
+            printf("\n OSS: Master is suspending the process %d", getpid());
+            fprintf(fptr,"\n OSS: Master is suspending the process %d", getpid());
+        }
         //sem_signal(SemID);
         
     }
@@ -168,13 +171,13 @@ int main(int * argc, char * argv[])
     printf("\n---Req Matrix---\n");
 
     for(i=0;i<20;i++)
-        fprintf(fptr,"R%i ",i);
+        fprintf(fptr,"R%0i  ",i);
     for(i=0;i<18;i++)
     {
         fprintf(fptr,"\n");
         for(j=0;j<20;j++)
         {
-            fprintf(fptr," %d",req[i][j]);
+            fprintf(fptr," %4i",req[i][j]);
             //fprintf(fptr,"%4d",rptr->req[i][j]);
         }
     }

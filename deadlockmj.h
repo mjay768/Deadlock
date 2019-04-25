@@ -11,7 +11,7 @@ int req_lt_available( int **req, int *avail, int pid, int num_res);
 int deadlockmj(int *available, int m, int n, int **request, int **allocated,int *pids);
 void copySHMData(int *available,int **request, int **allocated, int *pids);
 
-
+FILE *fptr;
 
 int available_[20];
 int request_[18][20];
@@ -61,14 +61,13 @@ int deadlockmj(int *available, int m, int n, int **request, int **allocated,int 
                 work[i] += allocated_[p][i];
             }
             p=-1;
-        }
+        }   
     }
     
     for(p=0;p<n;p++)
     {
         if(!finish[p])
         {
-            printf("\nMaster suspending process %d\n",pids_[p]);
             break;
         }
     }
